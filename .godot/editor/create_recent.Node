@@ -1,3 +1,5 @@
+MeshInstance3D
+RigidBody3D
 SpringBoneCollisionCapsule3D
 SpringBoneCollisionPlane3D
 SpringBoneSimulator3D

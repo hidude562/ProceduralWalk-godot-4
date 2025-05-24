@@ -55,7 +55,6 @@ var is_crouching := false
 @export var min_pitch = -90 # (float, -90, 0)
 @export var max_pitch = 90 # (float, 0, 90)
 
-@export var gravity: float = 98
 @export var velocity_damp: float = 6
 @export var velocity_change_rate: float = 5
 @export var min_velocity: float = 0.5
@@ -77,14 +76,16 @@ func _ready():
 
 func set_proper_local_legs_pos() -> void:
 	return
+	# Gets incorrect position, configure manually
+	"""
 	var l_foot_id: int = skeleton.find_bone('Bip01_L_Foot')
 	var l_foot_rest: Transform3D = skeleton.get_bone_global_pose(l_foot_id)
 	$PropLeftLegPos.transform.origin = l_foot_rest.origin
-	print($PropLeftLegPos.transform.origin)
 	
 	var r_foot_id: int = skeleton.find_bone('Bip01_R_Foot')
 	var r_foot_rest: Transform3D = skeleton.get_bone_global_pose(r_foot_id)
 	$PropRightLegPos.transform.origin = r_foot_rest.origin
+	"""
 
 func get_hips_pos() -> Vector3:
 	var hips_id: int = skeleton.find_bone('Bip01_Pelvis')
@@ -93,11 +94,8 @@ func get_hips_pos() -> Vector3:
 	return hips_rest.origin
 
 func set_hips_pos(pos: Vector3) -> void:
-	var hips_id: int = skeleton.find_bone('Hips')
-	var hips_rest: Transform3D = skeleton.get_bone_pose(hips_id)
-	var new_transform = Transform3D(hips_rest)
-	new_transform.origin = pos
-	skeleton.set_bone_pose(hips_id, new_transform)
+	#TODO
+	pass
 
 func set_legs_pos_to_prop_legs_pointers_pos() -> void:
 	l_leg_pos = $PropLeftLegPosToGround.global_transform.origin + Vector3.UP * foot_bone_dist_to_ground
@@ -117,7 +115,7 @@ func kinamatic_process(delta):
 	for i in get_slide_collision_count():
 		_handle_collision(get_slide_collision(i), delta)
 	
-	apply_gravity(delta)
+	#apply_gravity(delta)
 	apply_dyn_vel_damp(delta)
 	
 	_manipulate_velocities(delta)
@@ -127,12 +125,6 @@ func kinamatic_process(delta):
 
 	move_character(delta)
 	move_character_static(delta)
-
-func apply_gravity(delta: float) -> void:
-	if not is_on_floor():
-		velocity -= up * gravity * delta
-	else:
-		velocity.y = max(velocity.y, 0)
 
 func apply_dyn_vel_damp(delta: float) -> void:
 	velocity -= Vector3(velocity.x, 0, velocity.z) * velocity_damp * delta
@@ -182,7 +174,6 @@ func set_global_legs_pos() -> void:
 
 func set_prop_legs_ground_pointers() -> void:
 	var legs_pos := get_prop_legs_to_ground()
-	print('setting')
 	$PropLeftLegPosToGround.global_transform.origin = legs_pos[0] 
 	$PropRightLegPosToGround.global_transform.origin = legs_pos[1]
 	pass
@@ -297,8 +288,6 @@ func _input(event):
 		right = true
 	elif event.is_action_released("right"):
 		right = false
-	if event.is_action_released("jump"):
-		apply_impulse(Vector3.UP * 30)
 	if event.is_action_released("change_camera"):
 		first_camera = not first_camera
 		$CameraPivot/CameraBoom/Camera3D.current = first_camera
