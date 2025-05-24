@@ -1,72 +1,65 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=6 format=3 uid="uid://gmvxece2do5t"]
 
-[ext_resource path="res://player/player.tscn" type="PackedScene" id=1]
+[ext_resource type="PackedScene" uid="uid://61xey3uih46o" path="res://player/player.tscn" id="1"]
 
-[sub_resource type="SpatialMaterial" id=1]
+[sub_resource type="StandardMaterial3D" id="1"]
 
-[sub_resource type="SpatialMaterial" id=2]
-albedo_color = Color( 0, 1, 0.882353, 1 )
+[sub_resource type="StandardMaterial3D" id="2"]
+albedo_color = Color(0, 1, 0.882353, 1)
 
-[sub_resource type="SpatialMaterial" id=3]
-albedo_color = Color( 1, 0, 0, 1 )
+[sub_resource type="StandardMaterial3D" id="3"]
+albedo_color = Color(1, 0, 0, 1)
 
-[sub_resource type="SpatialMaterial" id=4]
-albedo_color = Color( 0, 0.462745, 1, 1 )
+[sub_resource type="StandardMaterial3D" id="4"]
+albedo_color = Color(0, 0.462745, 1, 1)
 
-[node name="World" type="Spatial"]
+[node name="World" type="Node3D"]
 
-[node name="CSGCombiner" type="CSGCombiner" parent="."]
+[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
 use_collision = true
 
-[node name="CSGBox" type="CSGBox" parent="CSGCombiner"]
-width = 50.0
-depth = 100.0
-material = SubResource( 1 )
+[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
+size = Vector3(50, 1, 100)
+material = SubResource("1")
 
-[node name="CSGBox4" type="CSGBox" parent="CSGCombiner"]
-transform = Transform( -1, -8.38214e-09, -8.702e-08, 0, 0.995393, -0.0958805, 8.74228e-08, -0.0958805, -0.995393, 0, 0.742838, 29.9339 )
-width = 11.456
-depth = 17.1993
-material = SubResource( 2 )
+[node name="CSGBox4" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(-1, -8.38214e-09, -8.702e-08, 0, 0.995393, -0.0958805, 8.74228e-08, -0.0958805, -0.995393, 0, 0.742838, 29.9339)
+size = Vector3(11.456, 1, 17.1993)
+material = SubResource("2")
 
-[node name="CSGCylinder" type="CSGCylinder" parent="CSGCombiner"]
-transform = Transform( -0.5, -0.866025, 3.78552e-08, 0, -4.37114e-08, -1, 0.866025, -0.5, 2.18557e-08, 6, 0.441196, -9.90031 )
+[node name="CSGCylinder3D" type="CSGCylinder3D" parent="CSGCombiner3D"]
+transform = Transform3D(-0.5, -0.866025, 3.78552e-08, 0, -4.37114e-08, -1, 0.866025, -0.5, 2.18557e-08, 6, 0.441196, -9.90031)
 height = 23.4054
 sides = 16
-material = SubResource( 3 )
+material = SubResource("3")
 
-[node name="CSGBox2" type="CSGBox" parent="CSGCombiner"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.314182, -35.4955 )
-width = 19.5341
-depth = 6.0
-material = SubResource( 4 )
+[node name="CSGBox2" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.314182, -35.4955)
+size = Vector3(19.5341, 1, 6)
+material = SubResource("4")
 
-[node name="CSGBox3" type="CSGBox" parent="CSGCombiner"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.658675, -37.4848 )
-width = 20.0
-depth = 6.0
-material = SubResource( 4 )
+[node name="CSGBox3" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.658675, -37.4848)
+size = Vector3(20, 1, 6)
+material = SubResource("4")
 
-[node name="CSGBox5" type="CSGBox" parent="CSGCombiner"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.00912, -39.2555 )
-width = 20.5571
-depth = 6.0
-material = SubResource( 4 )
+[node name="CSGBox5" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.00912, -39.2555)
+size = Vector3(20.5571, 1, 6)
+material = SubResource("4")
 
-[node name="CSGBox6" type="CSGBox" parent="CSGCombiner"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.889636, -41.1619 )
-width = 20.9735
-height = 2.87442
-depth = 6.0
-material = SubResource( 4 )
+[node name="CSGBox6" type="CSGBox3D" parent="CSGCombiner3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.889636, -41.1619)
+size = Vector3(20.9735, 2.87442, 6)
+material = SubResource("4")
 
-[node name="DirectionalLight" type="DirectionalLight" parent="."]
-transform = Transform( 1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 29.963, 20.338 )
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 29.963, 20.338)
 shadow_enabled = true
 
-[node name="Player" parent="." instance=ExtResource( 1 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16.6617, 0 )
+[node name="Player" parent="." instance=ExtResource("1")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16.6617, 0)
 spawn_point = NodePath("../Spawn")
 
-[node name="Spawn" type="Position3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16, 0 )
+[node name="Spawn" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16, 0)

@@ -1,0 +1,14 @@
+ea4bc82a6ad023ab7ee23ee620429895
+::res://::1748082916
+default_env.tres::Environment::-1::1748082900::0::1::::<><><>0<>0<><>::
+icon.png::CompressedTexture2D::7342413112613727539::1623798347::1748082921::1::::<><><>0<>0<>3d06b323d788e87cbd584825170d5440<>res://.godot/imported/icon.png-487276ed1e3a0c39cad0279d744ee560.ctex::
+README.md::TextFile::-1::1623798347::0::1::::<><><>0<>0<><>::
+world.tscn::PackedScene::-1::1748082900::0::1::::<><><>0<>0<><>::res://player/player.tscn
+::res://assets/::1623798347
+model.blend::PackedScene::6317788483544172596::1623798347::1748082922::1::::<><><>0<>0<>6edfd1ba880ce98a2958d584fef54512<>res://.godot/imported/model.blend-17015113b687403f550e74b63cd2349d.scn::
+model.glb::PackedScene::7102527832421943056::1623798347::1748082922::1::::<><><>0<>0<>2a7dcfe25db8fb4ecc437d8212ee4a30<>res://.godot/imported/model.glb-00a9a97a9f8521966061d70b7c72a0cd.scn::
+::res://player/::1623798347
+kinematic_character.gd::GDScript::8471142525332438828::1748082900::0::1::::KinematicCharacter<>CharacterBody3D<><>0<>0<><>::
+player.gd::GDScript::1312118608448065801::1748082900::0::1::::<>KinematicCharacter<><>0<>0<><>::
+player.tscn::PackedScene::-1::1748082900::0::1::::<><><>0<>0<><>::res://player/player.gd<>res://player/player_skin.tres
+player_skin.tres::StandardMaterial3D::-1::1748082900::0::1::::<><><>0<>0<><>::
