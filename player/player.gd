@@ -76,16 +76,18 @@ func _ready():
 	$Armature/Skeleton3D/RightLeg.start()
 
 func set_proper_local_legs_pos() -> void:
-	var l_foot_id: int = skeleton.find_bone('Foot.L')
+	return
+	var l_foot_id: int = skeleton.find_bone('Bip01_L_Foot')
 	var l_foot_rest: Transform3D = skeleton.get_bone_global_pose(l_foot_id)
 	$PropLeftLegPos.transform.origin = l_foot_rest.origin
+	print($PropLeftLegPos.transform.origin)
 	
-	var r_foot_id: int = skeleton.find_bone('Foot.R')
+	var r_foot_id: int = skeleton.find_bone('Bip01_R_Foot')
 	var r_foot_rest: Transform3D = skeleton.get_bone_global_pose(r_foot_id)
 	$PropRightLegPos.transform.origin = r_foot_rest.origin
 
 func get_hips_pos() -> Vector3:
-	var hips_id: int = skeleton.find_bone('Hips')
+	var hips_id: int = skeleton.find_bone('Bip01_Pelvis')
 	var hips_rest: Transform3D = skeleton.get_bone_pose(hips_id)
 	
 	return hips_rest.origin
@@ -127,7 +129,6 @@ func kinamatic_process(delta):
 	move_character_static(delta)
 
 func apply_gravity(delta: float) -> void:
-	print('gravity')
 	if not is_on_floor():
 		velocity -= up * gravity * delta
 	else:
@@ -181,8 +182,10 @@ func set_global_legs_pos() -> void:
 
 func set_prop_legs_ground_pointers() -> void:
 	var legs_pos := get_prop_legs_to_ground()
+	print('setting')
 	$PropLeftLegPosToGround.global_transform.origin = legs_pos[0] 
 	$PropRightLegPosToGround.global_transform.origin = legs_pos[1]
+	pass
 
 func get_prop_legs_to_ground() -> Array:
 	# prop legs pos moved in direction of characters velocity
@@ -260,13 +263,13 @@ func _manipulate_velocities(delta: float) -> void:
 	var dir := Vector3.ZERO
 	
 	if forward:
-		dir += transform.basis.z
-	if backward:
-		dir -= transform.basis.z
-	if left:
 		dir += transform.basis.x
-	if right:
+	if backward:
 		dir -= transform.basis.x
+	if left:
+		dir += transform.basis.z
+	if right:
+		dir -= transform.basis.z
 	
 	# grows static_velocity to desired speed every frame
 	static_velocity = static_velocity.lerp(dir.normalized() * speed, speed_change_rate * delta)

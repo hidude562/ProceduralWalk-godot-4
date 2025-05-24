@@ -301,28 +301,24 @@ shape = SubResource("CapsuleShape3D_oul6g")
 debug_color = Color(0, 0.6, 0.701961, 1)
 
 [node name="PropLeftLegPos" type="Marker3D" parent="."]
-visible = false
 
 [node name="Indicator" type="MeshInstance3D" parent="PropLeftLegPos"]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 mesh = SubResource("17")
 
 [node name="PropRightLegPos" type="Marker3D" parent="."]
-visible = false
 
 [node name="Indicator" type="MeshInstance3D" parent="PropRightLegPos"]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 mesh = SubResource("17")
 
 [node name="PropLeftLegPosToGround" type="Marker3D" parent="."]
-visible = false
 
 [node name="Indicator" type="MeshInstance3D" parent="PropLeftLegPosToGround"]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
 mesh = SubResource("17")
 
 [node name="PropRightLegPosToGround" type="Marker3D" parent="."]
-visible = false
 
 [node name="Indicator" type="MeshInstance3D" parent="PropRightLegPosToGround"]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
