@@ -1,3 +1,7 @@
+SpringBoneCollisionCapsule3D
+SpringBoneCollisionPlane3D
+SpringBoneSimulator3D
+PhysicalBone3D
 CharacterBody3D
 Area3D
 CollisionShape3D

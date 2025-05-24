@@ -267,9 +267,9 @@ func _manipulate_velocities(delta: float) -> void:
 	if backward:
 		dir -= transform.basis.x
 	if left:
-		dir += transform.basis.z
-	if right:
 		dir -= transform.basis.z
+	if right:
+		dir += transform.basis.z
 	
 	# grows static_velocity to desired speed every frame
 	static_velocity = static_velocity.lerp(dir.normalized() * speed, speed_change_rate * delta)

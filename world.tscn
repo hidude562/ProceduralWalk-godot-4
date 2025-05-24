@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=4 uid="uid://gmvxece2do5t"]
+[gd_scene load_steps=15 format=4 uid="uid://gmvxece2do5t"]
 
 [ext_resource type="Script" uid="uid://sxunwpqxn25j" path="res://player/player.gd" id="1_f3sb7"]
 
@@ -675,6 +675,10 @@ bind/191/name = &"IK_Right_Foot_end"
 bind/191/bone = -1
 bind/191/pose = Transform3D(0.0173278, -0.999842, 0.00388198, 0.899964, 0.0172885, 0.435621, -0.43562, -0.00405476, 0.900122, 10.1841, -3.85091, -16.4634)
 
+[sub_resource type="Curve" id="Curve_f3sb7"]
+_data = [Vector2(0.115118, 0.464286), 0.0, 0.0, 0, 0]
+point_count = 1
+
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tlwt5"]
 radius = 0.767696
 height = 4.60673
@@ -729,9 +733,10 @@ shadow_enabled = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16, 0)
 
 [node name="CharacterBody3D" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.379003, 0)
 script = ExtResource("1_f3sb7")
 speed = 3.8
-step_anim_height = 1.8
+step_anim_height = 0.765
 
 [node name="Armature" type="Node3D" parent="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 0.999986, 0.00523596, 0, -0.00523596, 0.999986, 0, 0, 0)
@@ -2106,6 +2111,75 @@ override_tip_basis = false
 use_magnet = true
 magnet = Vector3(-0.5, 0, 6)
 target_node = NodePath("../../../RightLegControl")
+
+[node name="SpringRightArm" type="SpringBoneSimulator3D" parent="CharacterBody3D/Armature/Skeleton3D"]
+transform = Transform3D(1, 0, 0, 0, 1, -4.65661e-10, 0, 4.65661e-10, 1, 315.185, -59.2184, -454.09)
+setting_count = 1
+settings/0/root_bone_name = "Bip01_R_UpperArm"
+settings/0/root_bone = 95
+settings/0/end_bone_name = "Bip01_R_Hand"
+settings/0/end_bone = 97
+settings/0/extend_end_bone = false
+settings/0/center_from = 0
+settings/0/individual_config = false
+settings/0/rotation_axis = 3
+settings/0/radius/value = 0.179
+settings/0/radius/damping_curve = null
+settings/0/stiffness/value = 40.0
+settings/0/stiffness/damping_curve = SubResource("Curve_f3sb7")
+settings/0/drag/value = 0.08
+settings/0/drag/damping_curve = null
+settings/0/gravity/value = 27.3
+settings/0/gravity/damping_curve = null
+settings/0/gravity/direction = Vector3(0, -1, 0)
+settings/0/enable_all_child_collisions = true
+settings/0/exclude_collision_count = 0
+
+[node name="SpringLeftArm" type="SpringBoneSimulator3D" parent="CharacterBody3D/Armature/Skeleton3D"]
+transform = Transform3D(1, 0, 0, 0, 1, -4.65661e-10, 0, 4.65661e-10, 1, 315.185, -59.2184, -454.09)
+setting_count = 1
+settings/0/root_bone_name = "Bip01_L_UpperArm"
+settings/0/root_bone = 128
+settings/0/end_bone_name = "Bip01_L_Hand"
+settings/0/end_bone = 130
+settings/0/extend_end_bone = false
+settings/0/center_from = 0
+settings/0/individual_config = false
+settings/0/rotation_axis = 3
+settings/0/radius/value = 0.179
+settings/0/radius/damping_curve = null
+settings/0/stiffness/value = 40.0
+settings/0/stiffness/damping_curve = SubResource("Curve_f3sb7")
+settings/0/drag/value = 0.08
+settings/0/drag/damping_curve = null
+settings/0/gravity/value = 27.3
+settings/0/gravity/damping_curve = null
+settings/0/gravity/direction = Vector3(0, -1, 0)
+settings/0/enable_all_child_collisions = true
+settings/0/exclude_collision_count = 0
+
+[node name="SpringBack" type="SpringBoneSimulator3D" parent="CharacterBody3D/Armature/Skeleton3D"]
+transform = Transform3D(1, 0, 0, 0, 1, -4.65661e-10, 0, 4.65661e-10, 1, 315.185, -59.2184, -454.09)
+setting_count = 1
+settings/0/root_bone_name = "Bip01_Pelvis"
+settings/0/root_bone = 2
+settings/0/end_bone_name = "Bip01_Head"
+settings/0/end_bone = 7
+settings/0/extend_end_bone = false
+settings/0/center_from = 0
+settings/0/individual_config = false
+settings/0/rotation_axis = 3
+settings/0/radius/value = 0.179
+settings/0/radius/damping_curve = null
+settings/0/stiffness/value = 40.0
+settings/0/stiffness/damping_curve = SubResource("Curve_f3sb7")
+settings/0/drag/value = 0.08
+settings/0/drag/damping_curve = null
+settings/0/gravity/value = -2.0
+settings/0/gravity/damping_curve = null
+settings/0/gravity/direction = Vector3(0, -1, 0)
+settings/0/enable_all_child_collisions = true
+settings/0/exclude_collision_count = 0
 
 [node name="CameraPivot" type="Node3D" parent="CharacterBody3D"]
 transform = Transform3D(0.00872656, 0, 0.999962, 0, 1, 0, -0.999962, 0, 0.00872656, 0, 5, 0)
