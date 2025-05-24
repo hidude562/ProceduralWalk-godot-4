@@ -55,6 +55,13 @@ var is_crouching := false
 @export var min_pitch = -90 # (float, -90, 0)
 @export var max_pitch = 90 # (float, 0, 90)
 
+@export var gravity: float = 98
+@export var velocity_damp: float = 6
+@export var velocity_change_rate: float = 5
+@export var min_velocity: float = 0.5
+@export var up: Vector3 = Vector3.UP
+var static_velocity: Vector3
+
 @onready var camera_pivot := $CameraPivot
 @onready var camera := $CameraPivot/CameraBoom/Camera3D
 
@@ -101,13 +108,71 @@ func _process(delta):
 	move_legs(delta)
 	if is_flying():
 		set_legs_pos_to_prop_legs_pointers_pos()
+	
+	kinamatic_process(delta)
+
+func kinamatic_process(delta):
+	for i in get_slide_collision_count():
+		_handle_collision(get_slide_collision(i), delta)
+	
+	apply_gravity(delta)
+	apply_dyn_vel_damp(delta)
+	
+	_manipulate_velocities(delta)
+	
+	if velocity.length() < min_velocity:
+		velocity = Vector3.ZERO
+
+	move_character(delta)
+	move_character_static(delta)
+
+func apply_gravity(delta: float) -> void:
+	if not is_on_floor():
+		velocity -= up * gravity * delta
+	else:
+		velocity.y = max(velocity.y, 0)
+
+func apply_dyn_vel_damp(delta: float) -> void:
+	velocity -= Vector3(velocity.x, 0, velocity.z) * velocity_damp * delta
+
+func move_character(delta: float) -> void:
+	if velocity.length() > 0:
+		if velocity.y > 0:
+			set_velocity(velocity)
+			set_up_direction(up)
+			move_and_slide()
+			velocity = velocity
+		else:
+			set_velocity(velocity)
+			# TODOConverter3To4 looks that snap in Godot 4 is float, not vector like in Godot 3 - previous value `Vector3.DOWN * 2`
+			set_up_direction(up)
+			move_and_slide()
+			velocity = velocity
+
+func move_character_static(delta: float) -> void:
+	if static_velocity.length() > 0:
+		if static_velocity.y > 0:
+			set_velocity(static_velocity)
+			set_up_direction(up)
+			move_and_slide()
+		else:
+			set_velocity(static_velocity)
+			# TODOConverter3To4 looks that snap in Godot 4 is float, not vector like in Godot 3 - previous value `Vector3.DOWN * 2`
+			set_up_direction(up)
+			move_and_slide()
+
+func apply_impulse(vel: Vector3) -> void:
+	velocity += vel
+
+func _handle_collision(collision: KinematicCollision3D, delta: float) -> void:
+	pass
 
 func handle_respawn() -> void:
 	if transform.origin.y < -20:
 		transform.origin = get_node(spawn_point).transform.origin
 
 func is_flying() -> bool:
-	return abs(velocity.y) > 1.0
+	return abs(static_velocity.y) > 1.0
 
 func set_global_legs_pos() -> void:
 	$LeftLegControl.global_transform.origin = l_leg_pos
@@ -121,8 +186,8 @@ func set_prop_legs_ground_pointers() -> void:
 func get_prop_legs_to_ground() -> Array:
 	# prop legs pos moved in direction of characters velocity
 	# TODO: static velocity?
-	var l_prop_leg_pos: Vector3 = $PropLeftLegPos.global_transform.origin + velocity.normalized() * directional_delta
-	var r_prop_leg_pos: Vector3 = $PropRightLegPos.global_transform.origin + velocity.normalized() * directional_delta
+	var l_prop_leg_pos: Vector3 = $PropLeftLegPos.global_transform.origin + static_velocity.normalized() * directional_delta
+	var r_prop_leg_pos: Vector3 = $PropRightLegPos.global_transform.origin + static_velocity.normalized() * directional_delta
 	
 	var l_leg_ray_params = PhysicsRayQueryParameters3D.new()
 	l_leg_ray_params.from = l_prop_leg_pos + Vector3.UP * ray_length
@@ -192,8 +257,6 @@ func get_legs_spread() -> float:
 
 func _manipulate_velocities(delta: float) -> void:
 	var dir := Vector3.ZERO
-	# TODO:
-	var min_velocity = 0.1
 	
 	if forward:
 		dir += transform.basis.z
@@ -203,11 +266,11 @@ func _manipulate_velocities(delta: float) -> void:
 		dir += transform.basis.x
 	if right:
 		dir -= transform.basis.x
+	
 	# grows static_velocity to desired speed every frame
-	velocity = velocity.lerp(dir.normalized() * speed, speed_change_rate * delta)
-	if velocity.length() < min_velocity:
-		velocity = Vector3.ZERO
-
+	static_velocity = static_velocity.lerp(dir.normalized() * speed, speed_change_rate * delta)
+	if static_velocity.length() < min_velocity:
+		static_velocity = Vector3.ZERO
 
 func _input(event):
 	if event is InputEventMouseMotion:
@@ -231,8 +294,7 @@ func _input(event):
 	elif event.is_action_released("right"):
 		right = false
 	if event.is_action_released("jump"):
-		#apply_impulse(Vector3.UP * 30)
-		pass
+		apply_impulse(Vector3.UP * 30)
 	if event.is_action_released("change_camera"):
 		first_camera = not first_camera
 		$CameraPivot/CameraBoom/Camera3D.current = first_camera

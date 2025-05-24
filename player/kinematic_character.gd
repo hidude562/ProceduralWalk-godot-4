@@ -15,7 +15,7 @@ var static_velocity: Vector3
 func _physics_process(delta: float) -> void:
 	for i in get_slide_collision_count():
 		_handle_collision(get_slide_collision(i), delta)
-
+	
 	apply_gravity(delta)
 	apply_dyn_vel_damp(delta)
 	

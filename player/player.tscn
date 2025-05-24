@@ -167,8 +167,9 @@ _surfaces = [{
 "vertex_data": PackedByteArray("Ry40vwAFGUDMzEw+Ry40vwAFGUDMzEw+Ry40vwAFGUDMzEw+Ry40v2Zrf0DMzEw+Ry40v2Zrf0DMzEw+Ry40v2Zrf0DMzEw+Ry40vwAFGUDMzEy+Ry40vwAFGUDMzEy+Ry40vwAFGUDMzEy+Ry40v2Zrf0DMzEy+Ry40v2Zrf0DMzEy+Ry40v2Zrf0DMzEy+wo+bvgAFGUDMzEw+wo+bvgAFGUDMzEw+wo+bvgAFGUDMzEw+wo+bvmZrf0DMzEw+wo+bvmZrf0DMzEw+wo+bvmZrf0DMzEw+wo+bvgAFGUDMzEy+wo+bvgAFGUDMzEy+wo+bvgAFGUDMzEy+wo+bvmZrf0DMzEy+wo+bvmZrf0DMzEy+wo+bvmZrf0DMzEy+/3///wAAAAD///+/AAAAAP9///8AAAAA/3///wAAAAD/f///AAAAAAAA/78AAAAA/3///wAAAAD///+/AAAAAP9///8AAAAA/3///wAAAAD/f///AAAAAAAA/78AAAAA////v83MTD//f///AACAP/9////NzEw//3///wAAgD8AAP+/zcxMPv9///8AAIA/////v83MTD7/f///AACAP/9///89Clc//3///wAAgD8AAP+/PQpXP/9///8AAIA/")
 }]
 
-[sub_resource type="CapsuleShape3D" id="16"]
-height = 4.0
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_oul6g"]
+radius = 1.25595
+height = 6.12106
 
 [sub_resource type="SphereMesh" id="17"]
 
@@ -295,8 +296,9 @@ target_node = NodePath("../../../RightLegControl")
 [node name="RightLegControl" type="Marker3D" parent="."]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, 3.4017, 0)
-shape = SubResource("16")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0228981, 3.18758, 0.0790406)
+shape = SubResource("CapsuleShape3D_oul6g")
+debug_color = Color(0, 0.6, 0.701961, 1)
 
 [node name="PropLeftLegPos" type="Marker3D" parent="."]
 visible = false
