@@ -55,6 +55,7 @@ var is_crouching := false
 @export var min_pitch = -90 # (float, -90, 0)
 @export var max_pitch = 90 # (float, 0, 90)
 
+@export var gravity: float = 98
 @export var velocity_damp: float = 6
 @export var velocity_change_rate: float = 5
 @export var min_velocity: float = 0.5
@@ -76,8 +77,6 @@ func _ready():
 
 func set_proper_local_legs_pos() -> void:
 	return
-	# Gets incorrect position, configure manually
-	"""
 	var l_foot_id: int = skeleton.find_bone('Bip01_L_Foot')
 	var l_foot_rest: Transform3D = skeleton.get_bone_global_pose(l_foot_id)
 	$PropLeftLegPos.transform.origin = l_foot_rest.origin
@@ -85,7 +84,6 @@ func set_proper_local_legs_pos() -> void:
 	var r_foot_id: int = skeleton.find_bone('Bip01_R_Foot')
 	var r_foot_rest: Transform3D = skeleton.get_bone_global_pose(r_foot_id)
 	$PropRightLegPos.transform.origin = r_foot_rest.origin
-	"""
 
 func get_hips_pos() -> Vector3:
 	var hips_id: int = skeleton.find_bone('Bip01_Pelvis')
@@ -94,7 +92,6 @@ func get_hips_pos() -> Vector3:
 	return hips_rest.origin
 
 func set_hips_pos(pos: Vector3) -> void:
-	#TODO
 	pass
 
 func set_legs_pos_to_prop_legs_pointers_pos() -> void:
@@ -112,22 +109,62 @@ func _process(delta):
 	kinamatic_process(delta)
 
 func kinamatic_process(delta):
+	# Handle collisions
 	for i in get_slide_collision_count():
 		_handle_collision(get_slide_collision(i), delta)
 	
-	#apply_gravity(delta)
+	# Apply gravity
+	apply_gravity(delta)
+	
+	# Apply movement and damping
+	_manipulate_velocities(delta)
 	apply_dyn_vel_damp(delta)
 	
-	_manipulate_velocities(delta)
-	
+	# Clean up tiny velocities
 	if velocity.length() < min_velocity:
 		velocity = Vector3.ZERO
+	
+	# Single move_and_slide call
+	move_and_slide()
 
-	move_character(delta)
-	move_character_static(delta)
+func apply_gravity(delta: float) -> void:
+	if not is_on_floor():
+		velocity.y -= gravity * delta
 
 func apply_dyn_vel_damp(delta: float) -> void:
-	velocity -= Vector3(velocity.x, 0, velocity.z) * velocity_damp * delta
+	# Only damp horizontal movement, preserve vertical (gravity/jumping)
+	var horizontal_velocity = Vector3(velocity.x, 0, velocity.z)
+	var damped_horizontal = horizontal_velocity * (1.0 - velocity_damp * delta)
+	velocity = Vector3(damped_horizontal.x, velocity.y, damped_horizontal.z)
+
+func _manipulate_velocities(delta: float) -> void:
+	var dir := Vector3.ZERO
+	
+	if forward:
+		dir += transform.basis.x  # Forward is typically -z, but you had x
+	if backward:
+		dir -= transform.basis.x
+	if left:
+		dir -= transform.basis.z
+	if right:
+		dir += transform.basis.z
+	
+	# Calculate desired horizontal movement
+	var desired_horizontal = dir.normalized() * speed
+	
+	# Merge with existing velocity (preserve Y component for gravity/jumping)
+	var current_horizontal = Vector3(velocity.x, 0, velocity.z)
+	var new_horizontal = current_horizontal.lerp(desired_horizontal, speed_change_rate * delta)
+	
+	# Update velocity (keep existing Y velocity)
+	velocity.x = new_horizontal.x
+	velocity.z = new_horizontal.z
+	
+	# Update static_velocity for animation purposes only
+	static_velocity = Vector3(new_horizontal.x, velocity.y, new_horizontal.z)
+	
+	if static_velocity.length() < min_velocity:
+		static_velocity = Vector3.ZERO
 
 func move_character(delta: float) -> void:
 	if velocity.length() > 0:
@@ -250,23 +287,6 @@ func move_legs(delta: float) -> void:
 func get_legs_spread() -> float:
 	return Vector2(l_leg_pos.x, l_leg_pos.z).distance_to(Vector2(r_leg_pos.x, r_leg_pos.z))
 
-func _manipulate_velocities(delta: float) -> void:
-	var dir := Vector3.ZERO
-	
-	if forward:
-		dir += transform.basis.x
-	if backward:
-		dir -= transform.basis.x
-	if left:
-		dir -= transform.basis.z
-	if right:
-		dir += transform.basis.z
-	
-	# grows static_velocity to desired speed every frame
-	static_velocity = static_velocity.lerp(dir.normalized() * speed, speed_change_rate * delta)
-	if static_velocity.length() < min_velocity:
-		static_velocity = Vector3.ZERO
-
 func _input(event):
 	if event is InputEventMouseMotion:
 		rotation_degrees.y -= event.relative.x * mouse_sensivitiy
@@ -288,6 +308,8 @@ func _input(event):
 		right = true
 	elif event.is_action_released("right"):
 		right = false
+	if event.is_action_released("jump"):
+		apply_impulse(Vector3.UP * 30)
 	if event.is_action_released("change_camera"):
 		first_camera = not first_camera
 		$CameraPivot/CameraBoom/Camera3D.current = first_camera
