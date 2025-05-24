@@ -1,14 +1,18 @@
 extends CharacterBody3D
 
-
 # moving
-@export var speed: float = 10
+@export var walk_speed: float = 10
+@export var run_speed: float = 20
 @export var speed_change_rate: float = 15.0
 
 var forward := false
 var backward := false
 var left := false
 var right := false
+var is_running := false
+
+# Current speed based on walking/running state
+var current_speed: float
 
 # animation
 # additional distance from the end of foot's bone to the ground
@@ -17,14 +21,18 @@ var right := false
 @export var foot_bone_dist_to_ground: float = -0.05
 # maximal distance in which the left leg can move away from proper leg position
 @export var max_left_leg_dist: float = 0.3
+@export var max_left_leg_dist_running: float = 0.5  # Larger step distance when running
 # legs move animation time for both legs
 @export var step_anim_time := 0.5
+@export var step_anim_time_running := 0.3  # Faster animation when running
 # additional distance for moving legs a little bit farther in direction of
 # velocity. Allows walk animation to look properly. When human walks he places
 # legs a little bit further in direction of walking.
 @export var directional_delta := 1.5
+@export var directional_delta_running := 2.5  # More forward step when running
 # the height of lifting foot when animating walk
 @export var step_anim_height := 1.0
+@export var step_anim_height_running := 1.5  # Higher step when running
 # maximum distance between legs in 2D space.
 # it should be calculated but to make it simpler just tweak the value and look
 # if it looks good to you.
@@ -70,7 +78,10 @@ var static_velocity: Vector3
 # respawn
 @export var spawn_point: NodePath
 
+@export var exhaustion = 0.3
+
 func _ready():
+	current_speed = walk_speed
 	set_proper_local_legs_pos()
 	$Armature/Skeleton3D/LeftLeg.start()
 	$Armature/Skeleton3D/RightLeg.start()
@@ -99,14 +110,47 @@ func set_legs_pos_to_prop_legs_pointers_pos() -> void:
 	r_leg_pos = $PropRightLegPosToGround.global_transform.origin + Vector3.UP * foot_bone_dist_to_ground
 
 func _process(delta):
+	update_movement_speed()
 	handle_respawn()
 	set_global_legs_pos()
 	set_prop_legs_ground_pointers()
 	move_legs(delta)
+	apply_exhaustion(delta)
 	if is_flying():
 		set_legs_pos_to_prop_legs_pointers_pos()
 	
 	kinamatic_process(delta)
+
+func apply_exhaustion(delta):
+	var skeleton_node = get_node('./Armature/Skeleton3D')
+	var skeleton_children = skeleton_node.get_children()
+	for i in range(len(skeleton_children)):
+		var child = skeleton_children[i]
+		if child is SpringBoneSimulator3D:
+			
+			"""
+			# Random wind
+			var random_wind_effect = 0.01
+			
+			var noise_vec3d_uncasted = []
+			const noise_rate = 0.1
+			for j in range(3):
+				var noise = FastNoiseLite.new()
+				noise.seed = i*4+j+1
+				var noise_val = noise.get_noise_1d(Time.get_ticks_msec() * noise_rate)
+				noise_vec3d_uncasted.append(noise_val)
+			var noise_vec3d = Vector3(noise_vec3d_uncasted[0], noise_vec3d_uncasted[1], noise_vec3d_uncasted[2]) * random_wind_effect
+			child.set_gravity_direction(0, child.get_gravity_direction(0) + noise_vec3d)
+			"""
+		
+func update_movement_speed():
+	# Update current speed based on running state and crouching
+	if is_crouching:
+		current_speed = walk_speed * 0.5  # Slower when crouching
+	elif is_running:
+		current_speed = run_speed
+	else:
+		current_speed = walk_speed
 
 func kinamatic_process(delta):
 	# Handle collisions
@@ -149,8 +193,8 @@ func _manipulate_velocities(delta: float) -> void:
 	if right:
 		dir += transform.basis.z
 	
-	# Calculate desired horizontal movement
-	var desired_horizontal = dir.normalized() * speed
+	# Calculate desired horizontal movement using current_speed
+	var desired_horizontal = dir.normalized() * current_speed
 	
 	# Merge with existing velocity (preserve Y component for gravity/jumping)
 	var current_horizontal = Vector3(velocity.x, 0, velocity.z)
@@ -217,9 +261,10 @@ func set_prop_legs_ground_pointers() -> void:
 
 func get_prop_legs_to_ground() -> Array:
 	# prop legs pos moved in direction of characters velocity
-	# TODO: static velocity?
-	var l_prop_leg_pos: Vector3 = $PropLeftLegPos.global_transform.origin + static_velocity.normalized() * directional_delta
-	var r_prop_leg_pos: Vector3 = $PropRightLegPos.global_transform.origin + static_velocity.normalized() * directional_delta
+	# Use different directional delta based on running state
+	var current_directional_delta = directional_delta_running if is_running else directional_delta
+	var l_prop_leg_pos: Vector3 = $PropLeftLegPos.global_transform.origin + static_velocity.normalized() * current_directional_delta
+	var r_prop_leg_pos: Vector3 = $PropRightLegPos.global_transform.origin + static_velocity.normalized() * current_directional_delta
 	
 	var l_leg_ray_params = PhysicsRayQueryParameters3D.new()
 	l_leg_ray_params.from = l_prop_leg_pos + Vector3.UP * ray_length
@@ -231,11 +276,8 @@ func get_prop_legs_to_ground() -> Array:
 	r_leg_ray_params.to =  r_prop_leg_pos + Vector3.DOWN * ray_length
 	r_leg_ray_params.exclude = [self]
 	
-	var l_leg_ray = space_state.intersect_ray(
-			l_leg_ray_params)
-	var r_leg_ray = space_state.intersect_ray(
-			r_leg_ray_params)
-	
+	var l_leg_ray = space_state.intersect_ray(l_leg_ray_params)
+	var r_leg_ray = space_state.intersect_ray(r_leg_ray_params)
 	
 	return [
 		l_leg_ray.position if not l_leg_ray.is_empty() else l_prop_leg_pos,
@@ -254,8 +296,11 @@ func move_legs(delta: float) -> void:
 	if is_flying():
 		return
 	
+	# Use different parameters based on running state
+	var current_max_leg_dist = max_left_leg_dist_running if is_running else max_left_leg_dist
+	
 	# if left legs is too far and leg animation isn't playing the set up the animation.
-	if get_left_leg_prop_dist() > max_left_leg_dist and not is_animating_legs:
+	if get_left_leg_prop_dist() > current_max_leg_dist and not is_animating_legs:
 		last_l_leg_pos = l_leg_pos
 		last_r_leg_pos = r_leg_pos
 		legs_anim_timer = 0.0
@@ -264,24 +309,29 @@ func move_legs(delta: float) -> void:
 	if is_animating_legs:
 		var desired_l_leg_pos: Vector3 = $PropLeftLegPosToGround.global_transform.origin + Vector3.DOWN * foot_bone_dist_to_ground
 		var desired_r_leg_pos: Vector3 = $PropRightLegPosToGround.global_transform.origin + Vector3.DOWN * foot_bone_dist_to_ground
+		
+		# Use different animation parameters based on running state
+		var current_step_time = step_anim_time_running if is_running else step_anim_time
+		var current_step_height = step_anim_height_running if is_running else step_anim_height
+		
 		# half of animation time goes to left leg
-		if legs_anim_timer / step_anim_time <= 0.5:
-			var l_leg_interpolation_v := legs_anim_timer / step_anim_time * 2.0
+		if legs_anim_timer / current_step_time <= 0.5:
+			var l_leg_interpolation_v = legs_anim_timer / current_step_time * 2.0
 			l_leg_pos = last_l_leg_pos.lerp(desired_l_leg_pos, l_leg_interpolation_v)
 			# moving left leg up
-			l_leg_pos = l_leg_pos + Vector3.UP * step_anim_height * sin(PI * l_leg_interpolation_v)
+			l_leg_pos = l_leg_pos + Vector3.UP * current_step_height * sin(PI * l_leg_interpolation_v)
 		# half of animation time goes to right leg
-		if legs_anim_timer / step_anim_time >= 0.5:
-			var r_leg_interpolation_v := (legs_anim_timer / step_anim_time - 0.5) * 2.0
+		if legs_anim_timer / current_step_time >= 0.5:
+			var r_leg_interpolation_v = (legs_anim_timer / current_step_time - 0.5) * 2.0
 			r_leg_pos = last_r_leg_pos.lerp(desired_r_leg_pos, r_leg_interpolation_v)
 			# moving right leg up
-			r_leg_pos = r_leg_pos + Vector3.UP * step_anim_height * sin(PI * r_leg_interpolation_v)
+			r_leg_pos = r_leg_pos + Vector3.UP * current_step_height * sin(PI * r_leg_interpolation_v)
 		# moving hips up and down depending on ratio of distance between legs and maximum allowed distance
 		set_hips_pos(current_hips_pos + Vector3.DOWN * get_legs_spread() / max_legs_spread * 0.3)
 		# increase timer time
 		legs_anim_timer += delta
 		# if timer time is greater than whole animation time then stop animating
-		if legs_anim_timer >= step_anim_time:
+		if legs_anim_timer >= current_step_time:
 			is_animating_legs = false
 
 func get_legs_spread() -> float:
@@ -308,6 +358,11 @@ func _input(event):
 		right = true
 	elif event.is_action_released("right"):
 		right = false
+	# Running input handling
+	if event.is_action_pressed("run"):
+		is_running = true
+	elif event.is_action_released("run"):
+		is_running = false
 	if event.is_action_released("jump"):
 		apply_impulse(Vector3.UP * 30)
 	if event.is_action_released("change_camera"):

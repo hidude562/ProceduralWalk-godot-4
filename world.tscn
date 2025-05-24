@@ -1,6 +1,7 @@
-[gd_scene load_steps=17 format=4 uid="uid://gmvxece2do5t"]
+[gd_scene load_steps=18 format=4 uid="uid://gmvxece2do5t"]
 
 [ext_resource type="Script" uid="uid://sxunwpqxn25j" path="res://player/player.gd" id="1_f3sb7"]
+[ext_resource type="Script" uid="uid://dlcx2svtlymre" path="res://crouch.gd" id="2_fj7yv"]
 
 [sub_resource type="StandardMaterial3D" id="1"]
 
@@ -2182,11 +2183,12 @@ settings/0/stiffness/value = 40.0
 settings/0/stiffness/damping_curve = SubResource("Curve_f3sb7")
 settings/0/drag/value = 0.08
 settings/0/drag/damping_curve = null
-settings/0/gravity/value = -2.0
+settings/0/gravity/value = 2.0
 settings/0/gravity/damping_curve = null
 settings/0/gravity/direction = Vector3(0, -1, 0)
 settings/0/enable_all_child_collisions = true
 settings/0/exclude_collision_count = 0
+script = ExtResource("2_fj7yv")
 
 [node name="CameraPivot" type="Node3D" parent="CharacterBody3D"]
 transform = Transform3D(0.00872656, 0, 0.999962, 0, 1, 0, -0.999962, 0, 0.00872656, 0, 5, 0)
