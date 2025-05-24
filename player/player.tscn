@@ -175,12 +175,12 @@ height = 6.12106
 
 [node name="Player" type="CharacterBody3D"]
 script = ExtResource("1")
-speed = 20.0
+speed = 5.0
+speed_change_rate = 6.75
 foot_bone_dist_to_ground = 0.25
-step_anim_time = 0.4
+step_anim_time = 1.0
 directional_delta = 3.0
 step_anim_height = 1.5
-max_legs_spread = 5.0
 
 [node name="CameraPivot" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5, 0)

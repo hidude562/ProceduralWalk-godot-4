@@ -127,6 +127,7 @@ func kinamatic_process(delta):
 	move_character_static(delta)
 
 func apply_gravity(delta: float) -> void:
+	print('gravity')
 	if not is_on_floor():
 		velocity -= up * gravity * delta
 	else:
