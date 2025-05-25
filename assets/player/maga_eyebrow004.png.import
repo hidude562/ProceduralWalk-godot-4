@@ -1,0 +1,38 @@
+[remap]
+
+importer="texture"
+type="CompressedTexture2D"
+uid="uid://bjkn0eeefd1fc"
+path.s3tc="res://.godot/imported/maga_eyebrow004.png-04b2a833b7b106e021bc739229f8a6b6.s3tc.ctex"
+metadata={
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
+}
+generator_parameters={
+"md5": "f828853572f09275c8360bc2e3b93025"
+}
+
+[deps]
+
+source_file="res://assets/player/maga_eyebrow004.png"
+dest_files=["res://.godot/imported/maga_eyebrow004.png-04b2a833b7b106e021bc739229f8a6b6.s3tc.ctex"]
+
+[params]
+
+compress/mode=2
+compress/high_quality=false
+compress/lossy_quality=0.7
+compress/hdr_compression=1
+compress/normal_map=0
+compress/channel_pack=0
+mipmaps/generate=true
+mipmaps/limit=-1
+roughness/mode=0
+roughness/src_normal=""
+process/fix_alpha_border=true
+process/premult_alpha=false
+process/normal_map_invert_y=false
+process/hdr_as_srgb=false
+process/hdr_clamp_exposure=false
+process/size_limit=0
+detect_3d/compress_to=0

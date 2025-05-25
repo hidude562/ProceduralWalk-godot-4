@@ -1,6 +1,7 @@
 res://default_env.tres
 res://world.tscn
+res://player/bone_link.gd
 res://player/player.tscn
 res://player/player_realistic.tscn
 res://player/player.gd
-res://crouch.gd
+res://scenes/character_body_3d_male.tscn

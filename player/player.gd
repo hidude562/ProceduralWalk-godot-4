@@ -14,6 +14,8 @@ var is_running := false
 # Current speed based on walking/running state
 var current_speed: float
 
+@export var jump_height = 30.0
+
 # animation
 # additional distance from the end of foot's bone to the ground
 # used to make foot be on the ground instead of in the ground.
@@ -85,25 +87,24 @@ func _ready():
 	set_proper_local_legs_pos()
 	$Armature/Skeleton3D/LeftLeg.start()
 	$Armature/Skeleton3D/RightLeg.start()
+	$Armature/Skeleton3D/Back.start()
 
 func set_proper_local_legs_pos() -> void:
 	return
-	var l_foot_id: int = skeleton.find_bone('Bip01_L_Foot')
-	var l_foot_rest: Transform3D = skeleton.get_bone_global_pose(l_foot_id)
-	$PropLeftLegPos.transform.origin = l_foot_rest.origin
-	
-	var r_foot_id: int = skeleton.find_bone('Bip01_R_Foot')
-	var r_foot_rest: Transform3D = skeleton.get_bone_global_pose(r_foot_id)
-	$PropRightLegPos.transform.origin = r_foot_rest.origin
 
 func get_hips_pos() -> Vector3:
-	var hips_id: int = skeleton.find_bone('Bip01_Pelvis')
+	var hips_id: int = skeleton.find_bone('spine')
 	var hips_rest: Transform3D = skeleton.get_bone_pose(hips_id)
 	
 	return hips_rest.origin
 
 func set_hips_pos(pos: Vector3) -> void:
-	pass
+	pos.z -= 7.5
+	var hips_id: int = skeleton.find_bone('hips')
+	var hips_rest: Transform3D = skeleton.get_bone_pose(hips_id)
+	var new_transform = Transform3D(hips_rest)
+	new_transform.origin = pos
+	skeleton.set_bone_pose(hips_id, new_transform)
 
 func set_legs_pos_to_prop_legs_pointers_pos() -> void:
 	l_leg_pos = $PropLeftLegPosToGround.global_transform.origin + Vector3.UP * foot_bone_dist_to_ground
@@ -128,7 +129,6 @@ func apply_exhaustion(delta):
 		var child = skeleton_children[i]
 		if child is SpringBoneSimulator3D:
 			
-			"""
 			# Random wind
 			var random_wind_effect = 0.01
 			
@@ -140,8 +140,9 @@ func apply_exhaustion(delta):
 				var noise_val = noise.get_noise_1d(Time.get_ticks_msec() * noise_rate)
 				noise_vec3d_uncasted.append(noise_val)
 			var noise_vec3d = Vector3(noise_vec3d_uncasted[0], noise_vec3d_uncasted[1], noise_vec3d_uncasted[2]) * random_wind_effect
-			child.set_gravity_direction(0, child.get_gravity_direction(0) + noise_vec3d)
-			"""
+			
+			#child.set_gravity_direction(0, child.get_gravity_direction(0) + noise_vec3d)
+			
 		
 func update_movement_speed():
 	# Update current speed based on running state and crouching
@@ -185,13 +186,20 @@ func _manipulate_velocities(delta: float) -> void:
 	var dir := Vector3.ZERO
 	
 	if forward:
-		dir += transform.basis.x  # Forward is typically -z, but you had x
+		dir += transform.basis.z  # Forward is typically -z, but you had x
 	if backward:
-		dir -= transform.basis.x
-	if left:
 		dir -= transform.basis.z
+	if left:
+		dir += transform.basis.x
 	if right:
-		dir += transform.basis.z
+		dir -= transform.basis.x
+	
+	const noise_rate = 0.1
+	var noise = FastNoiseLite.new()
+	noise.seed = 60
+	var noise_val = noise.get_noise_1d(Time.get_ticks_msec() * noise_rate) * 0.5
+	
+	dir = dir.rotated(Vector3(0,1,0), noise_val)
 	
 	# Calculate desired horizontal movement using current_speed
 	var desired_horizontal = dir.normalized() * current_speed
@@ -249,6 +257,10 @@ func handle_respawn() -> void:
 func is_flying() -> bool:
 	return abs(static_velocity.y) > 1.0
 
+func set_back_target(position_from_norm: Vector3) -> void:
+	var pos = Vector3(0,3.5,0) + position_from_norm
+	$BackArchController/BackControl.position = pos
+
 func set_global_legs_pos() -> void:
 	$LeftLegControl.global_transform.origin = l_leg_pos
 	$RightLegControl.global_transform.origin = r_leg_pos
@@ -269,12 +281,12 @@ func get_prop_legs_to_ground() -> Array:
 	var l_leg_ray_params = PhysicsRayQueryParameters3D.new()
 	l_leg_ray_params.from = l_prop_leg_pos + Vector3.UP * ray_length
 	l_leg_ray_params.to = l_prop_leg_pos + Vector3.DOWN * ray_length
-	l_leg_ray_params.exclude = [self]
+	l_leg_ray_params.exclude = [self, $StaticBody3D]
 	
 	var r_leg_ray_params = PhysicsRayQueryParameters3D.new()
 	r_leg_ray_params.from = r_prop_leg_pos + Vector3.UP * ray_length
 	r_leg_ray_params.to =  r_prop_leg_pos + Vector3.DOWN * ray_length
-	r_leg_ray_params.exclude = [self]
+	r_leg_ray_params.exclude = [self, $StaticBody3D]
 	
 	var l_leg_ray = space_state.intersect_ray(l_leg_ray_params)
 	var r_leg_ray = space_state.intersect_ray(r_leg_ray_params)
@@ -327,7 +339,7 @@ func move_legs(delta: float) -> void:
 			# moving right leg up
 			r_leg_pos = r_leg_pos + Vector3.UP * current_step_height * sin(PI * r_leg_interpolation_v)
 		# moving hips up and down depending on ratio of distance between legs and maximum allowed distance
-		set_hips_pos(current_hips_pos + Vector3.DOWN * get_legs_spread() / max_legs_spread * 0.3)
+		set_hips_pos(current_hips_pos + Vector3(-0.3, 0, 1) * get_legs_spread() / max_legs_spread * .3)
 		# increase timer time
 		legs_anim_timer += delta
 		# if timer time is greater than whole animation time then stop animating
@@ -363,17 +375,15 @@ func _input(event):
 		is_running = true
 	elif event.is_action_released("run"):
 		is_running = false
+	if event.is_action_pressed("jump"):
+		is_crouching = true
+		$BackArchController.crouch = is_crouching
 	if event.is_action_released("jump"):
-		apply_impulse(Vector3.UP * 30)
+		apply_impulse(Vector3.UP * jump_height * (1-$BackArchController.crouch_intermediate_progress))
 	if event.is_action_released("change_camera"):
 		first_camera = not first_camera
 		$CameraPivot/CameraBoom/Camera3D.current = first_camera
 		$Camera3D.current = not first_camera
 	if event.is_action_released("crouch"):
 		is_crouching = not is_crouching
-		if is_crouching:
-			current_hips_pos = original_hips_pos + Vector3.DOWN * crouch_delta
-			set_hips_pos(current_hips_pos)
-		else:
-			current_hips_pos = original_hips_pos
-			set_hips_pos(current_hips_pos)
+		$BackArchController.crouch = is_crouching
