@@ -88,6 +88,11 @@ func _ready():
 	$Armature/Skeleton3D/LeftLeg.start()
 	$Armature/Skeleton3D/RightLeg.start()
 	$Armature/Skeleton3D/Back.start()
+	$Armature/Skeleton3D/RightLeg.start()
+	$Armature/Skeleton3D/Back.start()
+	$Armature/Skeleton3D/RHand.start()
+	$Armature/Skeleton3D/LHand.start()
+	
 
 func set_proper_local_legs_pos() -> void:
 	return
@@ -99,7 +104,7 @@ func get_hips_pos() -> Vector3:
 	return hips_rest.origin
 
 func set_hips_pos(pos: Vector3) -> void:
-	pos.z -= 7.5
+	pos.z -= 8
 	var hips_id: int = skeleton.find_bone('hips')
 	var hips_rest: Transform3D = skeleton.get_bone_pose(hips_id)
 	var new_transform = Transform3D(hips_rest)
@@ -281,12 +286,12 @@ func get_prop_legs_to_ground() -> Array:
 	var l_leg_ray_params = PhysicsRayQueryParameters3D.new()
 	l_leg_ray_params.from = l_prop_leg_pos + Vector3.UP * ray_length
 	l_leg_ray_params.to = l_prop_leg_pos + Vector3.DOWN * ray_length
-	l_leg_ray_params.exclude = [self, $StaticBody3D]
+	l_leg_ray_params.exclude = [self, $StaticBody3D, $HandControl.holding]
 	
 	var r_leg_ray_params = PhysicsRayQueryParameters3D.new()
 	r_leg_ray_params.from = r_prop_leg_pos + Vector3.UP * ray_length
 	r_leg_ray_params.to =  r_prop_leg_pos + Vector3.DOWN * ray_length
-	r_leg_ray_params.exclude = [self, $StaticBody3D]
+	r_leg_ray_params.exclude = [self, $StaticBody3D, $HandControl.holding]
 	
 	var l_leg_ray = space_state.intersect_ray(l_leg_ray_params)
 	var r_leg_ray = space_state.intersect_ray(r_leg_ray_params)

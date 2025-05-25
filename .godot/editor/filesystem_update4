@@ -5,3 +5,5 @@ res://player/player.tscn
 res://player/player_realistic.tscn
 res://player/player.gd
 res://scenes/character_body_3d_male.tscn
+res://scenes/character_body_3d.tscn
+res://player/hand_controller.gd

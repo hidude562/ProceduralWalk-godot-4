@@ -1,8 +1,9 @@
-StaticBody3D
-Node3D
-WorldEnvironment
-Marker3D
 SkeletonIK3D
+Node
+Node3D
+Marker3D
+StaticBody3D
+WorldEnvironment
 MeshInstance3D
 RigidBody3D
 SpringBoneCollisionCapsule3D
@@ -11,4 +12,3 @@ SpringBoneSimulator3D
 PhysicalBone3D
 CharacterBody3D
 Area3D
-CollisionShape3D
