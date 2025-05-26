@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=4 uid="uid://bsrygfwbgw836"]
+[gd_scene load_steps=29 format=4 uid="uid://bsrygfwbgw836"]
 
 [ext_resource type="Script" uid="uid://sxunwpqxn25j" path="res://player/player.gd" id="1_jnkbd"]
 [ext_resource type="Texture2D" uid="uid://c6neefnmni06a" path="res://assets/player/p1/GOOFY DUDE_old_lightskinned_male_diffuse.png" id="2_l5itp"]
@@ -7,7 +7,6 @@
 [ext_resource type="Texture2D" uid="uid://c11le2kk70g37" path="res://assets/player/p1/GOOFY DUDE_shoes01_diffuse.png" id="5_q82ox"]
 [ext_resource type="Texture2D" uid="uid://dkdm58pauxh38" path="res://assets/player/p1/GOOFY DUDE_short01_diffuse.png" id="6_ghg0l"]
 [ext_resource type="Script" uid="uid://sbwi3emr4g5g" path="res://player/hand_controller.gd" id="8_5d5sw"]
-[ext_resource type="Script" uid="uid://cgfh623oagwoa" path="res://player/bone_link.gd" id="12_8wavp"]
 [ext_resource type="Script" uid="uid://dlcx2svtlymre" path="res://crouch.gd" id="13_t4qfi"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_n0msa"]
@@ -357,13 +356,8 @@ point_count = 5
 _data = [Vector2(0, 0.5206), 0.0, 0.0, 0, 0, Vector2(0.0789845, 0.0681819), 0.0, 0.0, 0, 0, Vector2(0.203103, 0.451299), 0.0, 0.0, 0, 0]
 point_count = 3
 
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tlwt5"]
-radius = 0.338342
-height = 0.88
-
-[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2o6r5"]
-radius = 0.539563
-height = 4.372
+[sub_resource type="BoxShape3D" id="BoxShape3D_l5itp"]
+size = Vector3(1, 4.205, 1)
 
 [sub_resource type="SphereMesh" id="SphereMesh_aqk2v"]
 
@@ -1117,30 +1111,9 @@ spring_length = 4.465
 [node name="Camera3D" type="Camera3D" parent="CameraPivot/CameraBoom"]
 current = true
 
-[node name="StaticBody3D" type="StaticBody3D" parent="."]
-disable_mode = 2
-collision_layer = 2
-collision_mask = 2
-
-[node name="CollisionShape3D3" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.707208, 0.553846, 0.0678418)
-shape = SubResource("CapsuleShape3D_tlwt5")
-debug_color = Color(0, 0.6, 0.701961, 1)
-script = ExtResource("12_8wavp")
-bone_name = "foot_R"
-offset = Vector3(0, 0.4, 0)
-
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.284268, 0.553846, 0.0678418)
-shape = SubResource("CapsuleShape3D_tlwt5")
-debug_color = Color(0, 0.6, 0.701961, 1)
-script = ExtResource("12_8wavp")
-bone_name = "foot_L"
-offset = Vector3(0, 0.4, 0)
-
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.277529, 2.07429, 0.185248)
-shape = SubResource("CapsuleShape3D_2o6r5")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.277529, 2.10614, 0.185248)
+shape = SubResource("BoxShape3D_l5itp")
 debug_color = Color(0, 0.6, 0.701961, 1)
 
 [node name="PropLeftLegPos" type="Marker3D" parent="."]
@@ -1183,11 +1156,10 @@ visible = false
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.162499)
 visible = false
 
-[node name="HandControl" type="Node3D" parent="." node_paths=PackedStringArray("holding")]
+[node name="HandControl" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.385851, 3.22225, 1.74848)
 script = ExtResource("8_5d5sw")
-holding = NodePath("../RigidBody3D")
-target = Vector3(0, 0, -0.29)
+target = Vector3(0, 0, 0.01)
 hand_offset_distance = 0.1
 
 [node name="RightHandControl" type="Marker3D" parent="HandControl"]

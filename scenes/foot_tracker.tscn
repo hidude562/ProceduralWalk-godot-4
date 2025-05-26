@@ -1,0 +1,28 @@
+[gd_scene load_steps=3 format=3 uid="uid://btqr0aid042bp"]
+
+[ext_resource type="Script" uid="uid://cgfh623oagwoa" path="res://player/bone_link.gd" id="1_m0cey"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tlwt5"]
+radius = 0.338342
+height = 0.88
+
+[node name="StaticBody3D" type="StaticBody3D"]
+disable_mode = 2
+collision_layer = 2
+collision_mask = 2
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.707208, 0.553846, 0.0678418)
+shape = SubResource("CapsuleShape3D_tlwt5")
+debug_color = Color(0, 0.6, 0.701961, 1)
+script = ExtResource("1_m0cey")
+bone_name = "foot_R"
+offset = Vector3(0, 0.4, 0)
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.284268, 0.553846, 0.0678418)
+shape = SubResource("CapsuleShape3D_tlwt5")
+debug_color = Color(0, 0.6, 0.701961, 1)
+script = ExtResource("1_m0cey")
+bone_name = "foot_L"
+offset = Vector3(0, 0.4, 0)

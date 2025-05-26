@@ -283,15 +283,19 @@ func get_prop_legs_to_ground() -> Array:
 	var l_prop_leg_pos: Vector3 = $PropLeftLegPos.global_transform.origin + static_velocity.normalized() * current_directional_delta
 	var r_prop_leg_pos: Vector3 = $PropRightLegPos.global_transform.origin + static_velocity.normalized() * current_directional_delta
 	
+	var exclude_list = [self, $StaticBody3D]
+	if $HandControl.holding:
+		exclude_list.append($HandControl.holding)
+	
 	var l_leg_ray_params = PhysicsRayQueryParameters3D.new()
 	l_leg_ray_params.from = l_prop_leg_pos + Vector3.UP * ray_length
 	l_leg_ray_params.to = l_prop_leg_pos + Vector3.DOWN * ray_length
-	l_leg_ray_params.exclude = [self, $StaticBody3D, $HandControl.holding]
+	l_leg_ray_params.exclude = exclude_list
 	
 	var r_leg_ray_params = PhysicsRayQueryParameters3D.new()
 	r_leg_ray_params.from = r_prop_leg_pos + Vector3.UP * ray_length
 	r_leg_ray_params.to =  r_prop_leg_pos + Vector3.DOWN * ray_length
-	r_leg_ray_params.exclude = [self, $StaticBody3D, $HandControl.holding]
+	r_leg_ray_params.exclude = exclude_list
 	
 	var l_leg_ray = space_state.intersect_ray(l_leg_ray_params)
 	var r_leg_ray = space_state.intersect_ray(r_leg_ray_params)

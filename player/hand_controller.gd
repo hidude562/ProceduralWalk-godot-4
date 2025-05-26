@@ -168,18 +168,20 @@ func update_hand_targets() -> void:
 		#left_hand.rotation.x += PI / 2
 
 func ignore_targets() -> void:
-	var skeleton = get_node('../Armature/Skeleton')
+	var skeleton = get_node('../Armature/Skeleton3D')
 	if skeleton != null:
-		skeleton.get_node('LHand').target_node = null
-		skeleton.get_node('RHand').target_node = null
+		skeleton.get_node('LHand').target_node = ""
+		skeleton.get_node('RHand').target_node = ""
+		skeleton.get_node('SpringLeftArm').active = true
+		skeleton.get_node('SpringRightArm').active = true
+		
 	
 
 func _process(delta: float) -> void:
 	if holding != null:
 		update_hand_targets()
 	else:
-		#ignore_targets()
-		pass
+		ignore_targets()
 
 
 func _on_spring_back_modification_processed() -> void:
