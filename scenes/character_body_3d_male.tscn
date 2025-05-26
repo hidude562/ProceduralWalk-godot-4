@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=4 uid="uid://bsrygfwbgw836"]
+[gd_scene load_steps=31 format=4 uid="uid://bsrygfwbgw836"]
 
 [ext_resource type="Script" uid="uid://sxunwpqxn25j" path="res://player/player.gd" id="1_jnkbd"]
 [ext_resource type="Texture2D" uid="uid://c6neefnmni06a" path="res://assets/player/p1/GOOFY DUDE_old_lightskinned_male_diffuse.png" id="2_l5itp"]
@@ -363,16 +363,13 @@ height = 0.88
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_2o6r5"]
 radius = 0.539563
-height = 4.67675
+height = 4.372
 
 [sub_resource type="SphereMesh" id="SphereMesh_aqk2v"]
 
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_5d5sw"]
-friction = 0.0
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_5d5sw"]
 
-[sub_resource type="SphereMesh" id="SphereMesh_stpkm"]
-
-[sub_resource type="SphereShape3D" id="SphereShape3D_5d5sw"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_stpkm"]
 
 [node name="CharacterBody3D" type="CharacterBody3D"]
 physics_interpolation_mode = 1
@@ -924,6 +921,7 @@ target_node = NodePath("../../../HandControl/RightHandControl")
 [node name="SpringRightArm" type="SpringBoneSimulator3D" parent="Armature/Skeleton3D"]
 transform = Transform3D(0.2, 0, 0, 0, -0.00104719, 0.199997, 0, -0.199997, -0.00104719, 63.037, -90.755, 12.319)
 active = false
+influence = 0.3
 setting_count = 1
 settings/0/root_bone_name = "upper_arm_R"
 settings/0/root_bone = 38
@@ -948,6 +946,7 @@ settings/0/exclude_collision_count = 0
 [node name="SpringLeftArm" type="SpringBoneSimulator3D" parent="Armature/Skeleton3D"]
 transform = Transform3D(0.2, 0, 0, 0, -0.00104719, 0.199997, 0, -0.199997, -0.00104719, 63.037, -90.7547, 12.319)
 active = false
+influence = 0.3
 setting_count = 1
 settings/0/root_bone_name = "upper_arm_L"
 settings/0/root_bone = 19
@@ -978,17 +977,32 @@ settings/0/end_bone_name = "chest1"
 settings/0/end_bone = 3
 settings/0/extend_end_bone = false
 settings/0/center_from = 0
-settings/0/individual_config = false
-settings/0/rotation_axis = 3
-settings/0/radius/value = 0.706
-settings/0/radius/damping_curve = null
-settings/0/stiffness/value = 40.0
-settings/0/stiffness/damping_curve = SubResource("Curve_f3sb7")
-settings/0/drag/value = 0.4
-settings/0/drag/damping_curve = SubResource("Curve_k3n1d")
-settings/0/gravity/value = 0.0
-settings/0/gravity/damping_curve = null
-settings/0/gravity/direction = Vector3(0, -1, 0)
+settings/0/individual_config = true
+settings/0/joint_count = 3
+settings/0/joints/0/bone_name = "spine"
+settings/0/joints/0/bone = 1
+settings/0/joints/0/rotation_axis = 3
+settings/0/joints/0/radius = 0.706
+settings/0/joints/0/stiffness = 40.0
+settings/0/joints/0/drag = 0.20824
+settings/0/joints/0/gravity = 0.0
+settings/0/joints/0/gravity_direction = Vector3(0, -1, 0)
+settings/0/joints/1/bone_name = "chest"
+settings/0/joints/1/bone = 2
+settings/0/joints/1/rotation_axis = 3
+settings/0/joints/1/radius = 0.706
+settings/0/joints/1/stiffness = 4.95424
+settings/0/joints/1/drag = 0.18052
+settings/0/joints/1/gravity = 0.0
+settings/0/joints/1/gravity_direction = Vector3(0, -1, 0)
+settings/0/joints/2/bone_name = "chest1"
+settings/0/joints/2/bone = 3
+settings/0/joints/2/rotation_axis = 3
+settings/0/joints/2/radius = 0.706
+settings/0/joints/2/stiffness = 10.05
+settings/0/joints/2/drag = 0.02
+settings/0/joints/2/gravity = 0.0
+settings/0/joints/2/gravity_direction = Vector3(0, -1, 0)
 settings/0/enable_all_child_collisions = true
 settings/0/exclude_collision_count = 0
 
@@ -1104,12 +1118,12 @@ spring_length = 4.465
 current = true
 
 [node name="StaticBody3D" type="StaticBody3D" parent="."]
-disable_mode = 1
+disable_mode = 2
 collision_layer = 2
 collision_mask = 2
 
 [node name="CollisionShape3D3" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.707208, 0.553846, 0.0678416)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.707208, 0.553846, 0.0678418)
 shape = SubResource("CapsuleShape3D_tlwt5")
 debug_color = Color(0, 0.6, 0.701961, 1)
 script = ExtResource("12_8wavp")
@@ -1117,7 +1131,7 @@ bone_name = "foot_R"
 offset = Vector3(0, 0.4, 0)
 
 [node name="CollisionShape3D2" type="CollisionShape3D" parent="StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.284268, 0.553846, 0.0678416)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.284268, 0.553846, 0.0678418)
 shape = SubResource("CapsuleShape3D_tlwt5")
 debug_color = Color(0, 0.6, 0.701961, 1)
 script = ExtResource("12_8wavp")
@@ -1125,12 +1139,13 @@ bone_name = "foot_L"
 offset = Vector3(0, 0.4, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.277529, 2.26278, 0.185248)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.277529, 2.07429, 0.185248)
 shape = SubResource("CapsuleShape3D_2o6r5")
 debug_color = Color(0, 0.6, 0.701961, 1)
 
 [node name="PropLeftLegPos" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.254156, 0, 0.143401)
+visible = false
 
 [node name="Indicator" type="MeshInstance3D" parent="PropLeftLegPos"]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
@@ -1138,6 +1153,7 @@ mesh = SubResource("SphereMesh_aqk2v")
 
 [node name="PropRightLegPos" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.725032, 0, 0.0872314)
+visible = false
 
 [node name="Indicator" type="MeshInstance3D" parent="PropRightLegPos"]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
@@ -1145,6 +1161,7 @@ mesh = SubResource("SphereMesh_aqk2v")
 
 [node name="PropLeftLegPosToGround" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23416, 0, 0.13051)
+visible = false
 
 [node name="Indicator" type="MeshInstance3D" parent="PropLeftLegPosToGround"]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
@@ -1152,6 +1169,7 @@ mesh = SubResource("SphereMesh_aqk2v")
 
 [node name="PropRightLegPosToGround" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.717717, 0, -0.62668)
+visible = false
 
 [node name="Indicator" type="MeshInstance3D" parent="PropRightLegPosToGround"]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, -0.0174036, -0.00901604, 0.789729)
@@ -1159,26 +1177,30 @@ mesh = SubResource("SphereMesh_aqk2v")
 
 [node name="LeftLegControl" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.0126055)
+visible = false
 
 [node name="RightLegControl" type="Marker3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.162499)
+visible = false
 
 [node name="HandControl" type="Node3D" parent="." node_paths=PackedStringArray("holding")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.385851, 3.22225, 1.74848)
 script = ExtResource("8_5d5sw")
 holding = NodePath("../RigidBody3D")
+target = Vector3(0, 0, -0.29)
 hand_offset_distance = 0.1
 
 [node name="RightHandControl" type="Marker3D" parent="HandControl"]
 transform = Transform3D(0.121869, -0.869775, 0.478163, 0, 0.481754, 0.876307, -0.992546, -0.106795, 0.058711, -0.357878, 0.1746, -0.689554)
+visible = false
 
 [node name="Indicator" type="MeshInstance3D" parent="HandControl/RightHandControl"]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
-visible = false
 mesh = SubResource("SphereMesh_aqk2v")
 
 [node name="LeftHandControl" type="Marker3D" parent="HandControl"]
 transform = Transform3D(0.116671, 0.903747, -0.411861, 0, 0.414693, 0.909961, 0.993171, -0.106166, 0.0483826, 1.26608, 0.1746, -0.419936)
+visible = false
 
 [node name="Indicator" type="MeshInstance3D" parent="HandControl/LeftHandControl"]
 transform = Transform3D(0.4, 0, 0, 0, 0.4, 0, 0, 0, 0.4, 0, 0, 0)
@@ -1187,6 +1209,7 @@ mesh = SubResource("SphereMesh_aqk2v")
 
 [node name="BackArchController" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.390731, 0.920505, 0, -0.920505, 0.390731, 0, 2.86797, 0)
+visible = false
 script = ExtResource("13_t4qfi")
 
 [node name="BackControl" type="Marker3D" parent="BackArchController"]
@@ -1200,12 +1223,12 @@ mesh = SubResource("SphereMesh_aqk2v")
 transform = Transform3D(0.1, 0, 0, 0, 0, -0.1, 0, 0.1, 0, 0, 0, 0)
 
 [node name="RigidBody3D" type="RigidBody3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.392299, 4.0615, -0.753038)
-collision_layer = 3
-physics_material_override = SubResource("PhysicsMaterial_5d5sw")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.238398, 2.84124, 1.29509)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D"]
-mesh = SubResource("SphereMesh_stpkm")
+mesh = SubResource("CapsuleMesh_5d5sw")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
-shape = SubResource("SphereShape3D_5d5sw")
+shape = SubResource("CapsuleShape3D_stpkm")
+
+[connection signal="modification_processed" from="Armature/Skeleton3D/SpringBack" to="HandControl" method="_on_spring_back_modification_processed"]

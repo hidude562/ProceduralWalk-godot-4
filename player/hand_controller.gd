@@ -9,12 +9,35 @@ extends Node3D
 @export var grip_strength: float = 1.0  # How tightly to grip (0-1)
 
 func set_holding(holding: PhysicsBody3D):
+	if self.holding != null:
+		if self.holding is RigidBody3D:
+			self.holding.freeze = false
+	
 	self.holding = holding
+	
+	if self.holding is RigidBody3D:
+		self.holding.freeze = true
+
+func get_actual_holding_center(hands_at: Vector3, target_weighting=0.5) -> Vector3:
+	var global_target = self.to_global(target)
+	var hands_at_weighting = 1-target_weighting
+	
+	return hands_at_weighting * hands_at + global_target * target_weighting
 
 func update_holding_position() -> void:
+	var skeleton: Skeleton3D = get_node('../Armature/Skeleton3D')
+	var hand_r = skeleton.get_bone_global_pose(skeleton.find_bone('hand_R'))
+	var hand_l = skeleton.get_bone_global_pose(skeleton.find_bone('hand_L'))
+	
+	var hands_at = skeleton.to_global((hand_r.origin + hand_l.origin) / 2)
+	
 	if holding:
-		holding.global_position = to_global(target)
-		holding.global_rotation = self.global_rotation
+		for child in holding.get_children():
+			if child is not CollisionShape3D:
+				child.global_position = get_actual_holding_center(hands_at, 0.0)#($RightHandControl.global_position + $LeftHandControl.global_position) / 2#get_actual_holding_center()
+			else:
+				child.global_position = get_actual_holding_center(hands_at, 1.0)
+			child.global_rotation = self.global_rotation
 
 func get_collision_shape() -> CollisionShape3D:
 	if not holding:
@@ -143,9 +166,21 @@ func update_hand_targets() -> void:
 		#left_hand.basis = global_transform.basis.inverse() * left_orientation
 		#left_hand.rotation.y = PI 
 		#left_hand.rotation.x += PI / 2
-		
+
+func ignore_targets() -> void:
+	var skeleton = get_node('../Armature/Skeleton')
+	if skeleton != null:
+		skeleton.get_node('LHand').target_node = null
+		skeleton.get_node('RHand').target_node = null
+	
 
 func _process(delta: float) -> void:
-	if holding:
-		update_holding_position()
+	if holding != null:
 		update_hand_targets()
+	else:
+		#ignore_targets()
+		pass
+
+
+func _on_spring_back_modification_processed() -> void:
+	update_holding_position()

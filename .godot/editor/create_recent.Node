@@ -1,11 +1,11 @@
+MeshInstance3D
+RigidBody3D
 SkeletonIK3D
 Node
 Node3D
 Marker3D
 StaticBody3D
 WorldEnvironment
-MeshInstance3D
-RigidBody3D
 SpringBoneCollisionCapsule3D
 SpringBoneCollisionPlane3D
 SpringBoneSimulator3D
