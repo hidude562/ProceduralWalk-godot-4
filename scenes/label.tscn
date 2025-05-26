@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://b2iro7n0itmo2"]
+
+[node name="Node3D" type="Node3D"]
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.039593, -0.0526981, 0.0109395)
+billboard = 1
+no_depth_test = true
+text = "Click to grab"

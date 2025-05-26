@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://gmvxece2do5t"]
+[gd_scene load_steps=13 format=3 uid="uid://gmvxece2do5t"]
 
 [ext_resource type="PackedScene" uid="uid://bqr5l164cdo14" path="res://assets/player/BILLY STRONKA.blend" id="1_k3n1d"]
 [ext_resource type="PackedScene" uid="uid://bsrygfwbgw836" path="res://scenes/character_body_3d_male.tscn" id="2_fj7yv"]
+[ext_resource type="Script" uid="uid://b1w5p7uvlyqvs" path="res://player/pickupable_item.gd" id="3_tlwt5"]
 
 [sub_resource type="StandardMaterial3D" id="1"]
 
@@ -22,6 +23,10 @@ sky_material = SubResource("ProceduralSkyMaterial_2o6r5")
 [sub_resource type="Environment" id="Environment_hiqwa"]
 background_mode = 2
 sky = SubResource("Sky_70uel")
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_fj7yv"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_tlwt5"]
 
 [node name="World" type="Node3D"]
 
@@ -68,6 +73,36 @@ size = Vector3(20.9735, 2.87442, 6)
 material = SubResource("4")
 
 [node name="CharacterBody3D" parent="." instance=ExtResource("2_fj7yv")]
+min_pitch = -10
+
+[node name="joe_biden-base" parent="CharacterBody3D/Armature/Skeleton3D" index="0"]
+surface_material_override/0 = null
+
+[node name="joe_biden-male_worksuit01" parent="CharacterBody3D/Armature/Skeleton3D" index="2"]
+surface_material_override/0 = null
+
+[node name="joe_biden-short01" parent="CharacterBody3D/Armature/Skeleton3D" index="4"]
+surface_material_override/0 = null
+
+[node name="SpringRightArm" parent="CharacterBody3D/Armature/Skeleton3D" index="11"]
+active = false
+influence = 1.0
+settings/0/stiffness/value = 14.0
+settings/0/gravity/value = 5.0
+
+[node name="SpringLeftArm" parent="CharacterBody3D/Armature/Skeleton3D" index="12"]
+active = false
+influence = 1.0
+settings/0/stiffness/value = 14.0
+settings/0/gravity/value = 5.0
+
+[node name="CameraPivot" parent="CharacterBody3D" index="1"]
+transform = Transform3D(-0.295708, 0, 0.955278, 0, 1, 0, -0.955278, 0, -0.295708, 0, 3.7, 0)
+
+[node name="HandControl" parent="CharacterBody3D" index="10" node_paths=PackedStringArray("holding")]
+holding = NodePath("../../RigidBody3D")
+left_target = Vector3(0.75, -1.075, -1.03)
+right_target = Vector3(-0.755, -1.075, -1.03)
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 0.866025, 0.5, 0, -0.5, 0.866025, 0, 29.963, 20.338)
@@ -78,3 +113,19 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 16, 0)
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_hiqwa")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.238398, 2.84124, 1.29509)
+script = ExtResource("3_tlwt5")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D"]
+mesh = SubResource("CapsuleMesh_fj7yv")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+shape = SubResource("CapsuleShape3D_tlwt5")
+
+[connection signal="modification_processed" from="CharacterBody3D/Armature/Skeleton3D/LeftLeg" to="CharacterBody3D/StaticBody3D/foot_L" method="_on_leg_modification_processed"]
+[connection signal="modification_processed" from="CharacterBody3D/Armature/Skeleton3D/RightLeg" to="CharacterBody3D/StaticBody3D/foot_R" method="_on_leg_modification_processed"]
+
+[editable path="CharacterBody3D"]
+[editable path="CharacterBody3D/StaticBody3D"]

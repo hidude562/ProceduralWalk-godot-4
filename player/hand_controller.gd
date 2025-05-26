@@ -8,12 +8,30 @@ extends Node3D
 @export var hand_offset_distance: float = 0.01  # How far hands should be from surface
 @export var grip_strength: float = 1.0  # How tightly to grip (0-1)
 
+# If not holding, do this
+@export var left_target = Vector3()
+@export var right_target = Vector3()
+
+func _ready() -> void:
+	toggle_targets()
+
 func set_holding(holding: PhysicsBody3D):
 	if self.holding != null:
 		if self.holding is RigidBody3D:
 			self.holding.freeze = false
-	
+			
+			# Reset position to mesh
+			var reset_pos_to = Vector3()
+			for child in self.holding.get_children():
+				if child is not CollisionShape3D:
+					reset_pos_to = child.global_position
+					#child.position = Vector3()
+				else:
+					child.global_position = reset_pos_to
+			#self.holding.global_position = reset_pos_to
+			
 	self.holding = holding
+	toggle_targets()
 	
 	if self.holding is RigidBody3D:
 		self.holding.freeze = true
@@ -31,7 +49,8 @@ func update_holding_position() -> void:
 	
 	var hands_at = skeleton.to_global((hand_r.origin + hand_l.origin) / 2)
 	
-	if holding:
+	if holding != null:
+		holding.global_position = get_actual_holding_center(hands_at, 0.0)
 		for child in holding.get_children():
 			if child is not CollisionShape3D:
 				child.global_position = get_actual_holding_center(hands_at, 0.0)#($RightHandControl.global_position + $LeftHandControl.global_position) / 2#get_actual_holding_center()
@@ -132,6 +151,10 @@ func calculate_hand_orientation(hand_pos: Vector3, target_pos: Vector3) -> Basis
 	up = right.cross(forward).normalized()
 	
 	return Basis(-forward, -up, -right)
+	
+func update_individual_hand_targets() -> void:
+	$RightHandControl.position = right_target
+	$LeftHandControl.position = left_target
 
 func update_hand_targets() -> void:
 	if not holding:
@@ -167,21 +190,20 @@ func update_hand_targets() -> void:
 		#left_hand.rotation.y = PI 
 		#left_hand.rotation.x += PI / 2
 
-func ignore_targets() -> void:
+func toggle_targets() -> void:
 	var skeleton = get_node('../Armature/Skeleton3D')
 	if skeleton != null:
-		skeleton.get_node('LHand').target_node = ""
-		skeleton.get_node('RHand').target_node = ""
-		skeleton.get_node('SpringLeftArm').active = true
-		skeleton.get_node('SpringRightArm').active = true
-		
-	
+		var is_holding = holding != null
+		skeleton.get_node('LHand').active = is_holding
+		skeleton.get_node('RHand').active = is_holding
+		skeleton.get_node('SpringLeftArm').active = not is_holding
+		skeleton.get_node('SpringRightArm').active = not is_holding
 
 func _process(delta: float) -> void:
 	if holding != null:
 		update_hand_targets()
 	else:
-		ignore_targets()
+		update_individual_hand_targets()
 
 
 func _on_spring_back_modification_processed() -> void:

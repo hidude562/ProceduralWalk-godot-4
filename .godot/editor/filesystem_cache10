@@ -1,10 +1,10 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1748214483
+::res://::1748258790
 crouch.gd::GDScript/GDScript::7936913772614965638::1748168501::0::1::::<>Node3D<><>0<>0<><>::
-default_env.tres::Environment::4149684029881247112::1748183882::0::1::::<><><>0<>0<><>::
+default_env.tres::Environment::4149684029881247112::1748258743::0::1::::<><><>0<>0<><>::
 icon.png::CompressedTexture2D/CompressedTexture2D::7342413112613727539::1623798347::1748082921::1::::<><><>0<>0<>3d06b323d788e87cbd584825170d5440<>res://.godot/imported/icon.png-487276ed1e3a0c39cad0279d744ee560.ctex::
 README.md::TextFile/TextFile::-1::1623798347::0::1::::<><><>0<>0<><>::
-world.tscn::PackedScene::447221938385787279::1748183540::0::1::::<><><>0<>0<><>::uid://bqr5l164cdo14::::res://assets/player/BILLY STRONKA.blend<>uid://bsrygfwbgw836::::res://scenes/character_body_3d_male.tscn
+world.tscn::PackedScene::447221938385787279::1748258743::0::1::::<><><>0<>0<><>::uid://bqr5l164cdo14::::res://assets/player/BILLY STRONKA.blend<>uid://bsrygfwbgw836::::res://scenes/character_body_3d_male.tscn<>uid://btqr0aid042bp::::res://scenes/foot_tracker.tscn<>uid://b1w5p7uvlyqvs::::res://player/pickupable_item.gd
 ::res://addons/::1731322660
 ::res://addons/wigglebone/::1748090831
 functions.gd::GDScript/GDScript::6541750736885616219::1731322660::0::1::::<>RefCounted<><>0<>0<><>::
@@ -48,16 +48,19 @@ GOOFY DUDE_male_worksuit01_diffuse.png::CompressedTexture2D/CompressedTexture2D:
 GOOFY DUDE_old_lightskinned_male_diffuse.png::CompressedTexture2D/CompressedTexture2D::6975782725376818514::1748171264::1748171268::1::::<><><>0<>0<>b212d3e7785609024db4bcc8ed96411c<>res://.godot/imported/GOOFY DUDE_old_lightskinned_male_diffuse.png-0a4545d591ee7eeddd7d925928ef5692.s3tc.ctex::
 GOOFY DUDE_shoes01_diffuse.png::CompressedTexture2D/CompressedTexture2D::6652101587753254520::1748171266::1748171268::1::::<><><>0<>0<>b27a1647f141a6dd211bf67bc2ae8c2f<>res://.godot/imported/GOOFY DUDE_shoes01_diffuse.png-b31d10633d7346a4a4a2ee178bdc18b1.s3tc.ctex::
 GOOFY DUDE_short01_diffuse.png::CompressedTexture2D/CompressedTexture2D::7868127554922411565::1748171267::1748171268::1::::<><><>0<>0<>01bf34a5815dcc32855096e84b32dbcf<>res://.godot/imported/GOOFY DUDE_short01_diffuse.png-bb5258d1497fcaddf5a115569105c42c.s3tc.ctex::
-::res://player/::1748183830
+::res://player/::1748258743
 back.gd::GDScript/GDScript::5572039304539371325::1748108430::0::1::::<>SkeletonIK3D<><>0<>1<><>::
-bone_link.gd::GDScript::5204778158566447524::1748170484::0::1::::<>Node3D<><>0<>1<><>::
-hand_controller.gd::GDScript::1266815100832856338::1748183253::0::1::::<>Node3D<><>0<>0<><>::
+bone_link.gd::GDScript::5204778158566447524::1748258742::0::1::::<>Node3D<><>0<>1<><>::
+hand_controller.gd::GDScript::1266815100832856338::1748257742::0::1::::<>Node3D<><>0<>0<><>::
 kinematic_character.gd::GDScript/GDScript::8471142525332438828::1748085081::0::1::::KinematicCharacter<>CharacterBody3D<><>0<>0<><>::
 new_script.gd::GDScript/GDScript::3378044197439500425::1748096354::0::1::::<>CharacterBody3D<><>0<>0<><>::
-player.gd::GDScript::1312118608448065801::1748183830::0::1::::<>CharacterBody3D<><>0<>0<><>::
-player.tscn::PackedScene::2230932913128442328::1748172284::0::1::::<><><>0<>0<><>::uid://sxunwpqxn25j::::res://player/player.gd
-player_realistic.tscn::PackedScene::4471906777722161887::1748183540::0::1::::<><><>0<>0<><>::uid://sxunwpqxn25j::::res://player/player.gd
+pickupable_item.gd::GDScript::4258596938175924524::1748257842::0::1::::<>RigidBody3D<><>0<>0<><>::
+player.gd::GDScript::1312118608448065801::1748255955::0::1::::<>CharacterBody3D<><>0<>0<><>::
+player.tscn::PackedScene/PackedScene::2230932913128442328::1748172284::0::1::::<><><>0<>0<><>::uid://sxunwpqxn25j::::res://player/player.gd
+player_realistic.tscn::PackedScene::4471906777722161887::1748258743::0::1::::<><><>0<>0<><>::uid://sxunwpqxn25j::::res://player/player.gd
 player_skin.tres::StandardMaterial3D/StandardMaterial3D::-1::1748082900::0::1::::<><><>0<>0<><>::
-::res://scenes/::1748183882
-character_body_3d.tscn::PackedScene::4269599948514483260::1748183540::0::1::::<><><>0<>0<><>::uid://sxunwpqxn25j::::res://player/player.gd<>uid://bjkn0eeefd1fc::::res://assets/player/maga_eyebrow004.png<>uid://cxs4xd4t7tq0o::::res://assets/player/maga_eyelashes03.png<>uid://c3fk728vtfjum::::res://assets/player/maga_young_lightskinned_female_diffuse5.png<>uid://eqim3pi586vb::::res://assets/player/maga_brown_eye.png<>uid://csxm71l5cp73u::::res://assets/player/maga_maga-hatdiff.jpg<>uid://cmq7og1haj5hi::::res://assets/player/maga_ponytail01_diffuse.png<>uid://cfqra0ev4n583::::res://assets/player/maga_shortjeans.png<>uid://beetrcegjqabj::::res://assets/player/maga_teeth.png<>uid://c63qy6n0tkxdj::::res://assets/player/maga_tennisshoes.png<>uid://c7x4o2ofw08q0::::res://assets/player/maga_tongue01_diffuse.png<>uid://cgfh623oagwoa::::res://player/bone_link.gd<>uid://dlcx2svtlymre::::res://crouch.gd
-character_body_3d_male.tscn::PackedScene::3686382510243329803::1748183882::0::1::::<><><>0<>0<><>::uid://sxunwpqxn25j::::res://player/player.gd<>uid://c6neefnmni06a::::res://assets/player/p1/GOOFY DUDE_old_lightskinned_male_diffuse.png<>uid://lpymxi2rm51d::::res://assets/player/p1/GOOFY DUDE_brown_eye.png<>uid://c4p3563l8cgjf::::res://assets/player/p1/GOOFY DUDE_male_worksuit01_diffuse.png<>uid://c11le2kk70g37::::res://assets/player/p1/GOOFY DUDE_shoes01_diffuse.png<>uid://dkdm58pauxh38::::res://assets/player/p1/GOOFY DUDE_short01_diffuse.png<>uid://sbwi3emr4g5g::::res://player/hand_controller.gd<>uid://cgfh623oagwoa::::res://player/bone_link.gd<>uid://dlcx2svtlymre::::res://crouch.gd
+::res://scenes/::1748258743
+character_body_3d.tscn::PackedScene::4269599948514483260::1748258743::0::1::::<><><>0<>0<><>::uid://sxunwpqxn25j::::res://player/player.gd<>uid://bjkn0eeefd1fc::::res://assets/player/maga_eyebrow004.png<>uid://cxs4xd4t7tq0o::::res://assets/player/maga_eyelashes03.png<>uid://c3fk728vtfjum::::res://assets/player/maga_young_lightskinned_female_diffuse5.png<>uid://eqim3pi586vb::::res://assets/player/maga_brown_eye.png<>uid://csxm71l5cp73u::::res://assets/player/maga_maga-hatdiff.jpg<>uid://cmq7og1haj5hi::::res://assets/player/maga_ponytail01_diffuse.png<>uid://cfqra0ev4n583::::res://assets/player/maga_shortjeans.png<>uid://beetrcegjqabj::::res://assets/player/maga_teeth.png<>uid://c63qy6n0tkxdj::::res://assets/player/maga_tennisshoes.png<>uid://c7x4o2ofw08q0::::res://assets/player/maga_tongue01_diffuse.png<>uid://cgfh623oagwoa::::res://player/bone_link.gd<>uid://dlcx2svtlymre::::res://crouch.gd
+character_body_3d_male.tscn::PackedScene::3686382510243329803::1748258743::0::1::::<><><>0<>0<><>::uid://sxunwpqxn25j::::res://player/player.gd<>uid://c6neefnmni06a::::res://assets/player/p1/GOOFY DUDE_old_lightskinned_male_diffuse.png<>uid://lpymxi2rm51d::::res://assets/player/p1/GOOFY DUDE_brown_eye.png<>uid://c4p3563l8cgjf::::res://assets/player/p1/GOOFY DUDE_male_worksuit01_diffuse.png<>uid://c11le2kk70g37::::res://assets/player/p1/GOOFY DUDE_shoes01_diffuse.png<>uid://dkdm58pauxh38::::res://assets/player/p1/GOOFY DUDE_short01_diffuse.png<>uid://btqr0aid042bp::::res://scenes/foot_tracker.tscn<>uid://sbwi3emr4g5g::::res://player/hand_controller.gd<>uid://dlcx2svtlymre::::res://crouch.gd
+foot_tracker.tscn::PackedScene::3754115603134646133::1748258743::0::1::::<><><>0<>0<><>::uid://cgfh623oagwoa::::res://player/bone_link.gd
+label.tscn::PackedScene::4299093375921151519::1748258743::0::1::::<><><>0<>0<><>::

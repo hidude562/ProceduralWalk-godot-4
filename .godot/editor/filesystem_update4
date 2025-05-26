@@ -1,7 +1,10 @@
 res://default_env.tres
+res://scenes/character_body_3d_male.tscn
+res://player/player.gd
+res://player/bone_link.gd
 res://world.tscn
 res://player/player_realistic.tscn
 res://scenes/character_body_3d.tscn
-res://scenes/character_body_3d_male.tscn
+res://scenes/label.tscn
+res://scenes/foot_tracker.tscn
 res://player/hand_controller.gd
-res://player/player.gd
